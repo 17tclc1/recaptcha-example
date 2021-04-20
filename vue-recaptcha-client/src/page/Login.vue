@@ -99,6 +99,7 @@ export default {
             appendToast: false
           });
         } else {
+          console.log(error);
           this.$bvToast.toast('An unknown error has occurred. Please try again', {
             title: 'An error has occurred while requesting recaptcha',
             autoHideDelay: 3000,
@@ -123,6 +124,7 @@ export default {
             appendToast: false
           });
         } else {
+          console.log(error);
           this.$bvToast.toast('An unknown error has occurred. Please try again', {
             title: 'An error has occurred while submiting recaptcha',
             autoHideDelay: 3000,
@@ -150,6 +152,7 @@ export default {
           }
         }
       } catch (error) {
+        console.log(error);
         this.$bvToast.toast('An unknown error has occurred. Please try again', {
           title: 'An error has occurred while login',
           autoHideDelay: 3000,
