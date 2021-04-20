@@ -29,6 +29,7 @@ module.exports = routerGroup({
     path: '/validate',
     handlers: [
       limiter,
+      isNotEmpty('trustToken'),
       validateCaptcha
     ] 
   },

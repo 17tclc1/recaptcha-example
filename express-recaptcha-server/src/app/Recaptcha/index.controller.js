@@ -44,10 +44,7 @@ const solveCaptcha = async (req, res, next) => {
 
 const validateCaptcha = (req, res, next) => {
   try {
-    const trustToken= req.headers['trust-token'];
-    if(!trustToken) {
-      throw new HTTPException(400, "No trust token found");
-    }
+    const { trustToken } = req.body;
     const decoded = decodeToken(trustToken);
     return res.json({ 
       status: "success",
