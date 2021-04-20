@@ -82,7 +82,8 @@ export default {
   methods: {
     async requestRecaptcha() {
       try {
-        const payload = await axios.get(`${process.env.VUE_APP_BASE_URL}/v1/recaptcha`);
+        this.recaptcha.result = null;
+        const payload = await axios.get(process.env.VUE_APP_RECAPTCHA_BASE_URL);
         if(payload.data.statusCode === 200) {
           this.recaptcha.url = payload.data.data.recaptcha;
           this.recaptcha.device_uid = payload.data.data.device_uid
@@ -109,10 +110,11 @@ export default {
     },
     async submitRecaptcha() {
       try {
-        const payload = await axios.post(`${process.env.VUE_APP_BASE_URL}/v1/recaptcha/solve`, this.recaptcha);
+        const payload = await axios.post(`${process.env.VUE_APP_RECAPTCHA_BASE_URL}/solve`, this.recaptcha);
         this.trustToken = payload.data.data.trustToken
         this.recaptchaHidden = true;
       } catch (error) {
+        console.log(error);
         if(error.response && error.response.data) {
           this.$bvToast.toast(error.response.data.message, {
             title: 'An error has occurred while submiting recaptcha',
@@ -132,10 +134,29 @@ export default {
       }
     },
     async submit() {
-      if(!this.trustToken) {
+      try {
+        if(!this.trustToken) {
+          await this.requestRecaptcha();
+        } else {
+          const response = await axios.post(`${process.env.VUE_APP_BASE_URL}/auth/login`, {
+            email: this.form.email,
+            password: this.form.password,
+            trustToken: this.trustToken,
+          });
+          if(response.data.statusCode === 200) {
+            console.log(response.data.data);
+          } else {
+            await this.requestRecaptcha();
+          }
+        }
+      } catch (error) {
+        this.$bvToast.toast('An unknown error has occurred. Please try again', {
+          title: 'An error has occurred while login',
+          autoHideDelay: 3000,
+          variant: 'danger',
+          appendToast: false
+        });
         await this.requestRecaptcha();
-      } else {
-        console.log(this.trustToken);
       }
     }
   }
