@@ -13,7 +13,6 @@ const isRecaptchaValid = () => async (req, res, next) => {
         message: response.data.message,
       });
     }
-    console.log('NGON!');
     return next();
   } catch (error) {
     if (error.response && error.response.data.message) {

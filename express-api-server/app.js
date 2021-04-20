@@ -4,11 +4,13 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const chalk = require('chalk');
+const cors = require('cors');
 const router = require('./src/api/router');
 const { handleError } = require('./src/common/helpers/errorHandler');
 const { PORT } = require('./src/common/env/env');
 // ExpressJS application
 const app = express();
+app.use(cors());
 require('dotenv').config();
 // ExpressJS middleware
 if (app.get('env') !== 'test') {
