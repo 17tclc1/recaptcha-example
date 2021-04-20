@@ -7,6 +7,7 @@ const {
   USER_NOT_FOUND,
   INVALID_CREDENTIAL,
 } = require('../../constants/httpMessage');
+const { JWT_SECRET, JWT_EXPIRE } = require('../../common/env/env');
 
 const login = async (req, res, next) => {
   try {
@@ -18,8 +19,8 @@ const login = async (req, res, next) => {
     if (!check) {
       throw new HTTPException(401, INVALID_CREDENTIAL);
     }
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-      expiresIn: parseInt(process.env.JWT_EXPIRE, 10),
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, {
+      expiresIn: parseInt(JWT_EXPIRE, 10),
       noTimestamp: true,
     });
     return res.json({

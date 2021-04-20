@@ -1,14 +1,21 @@
-require('dotenv').config({ path: `${__dirname}/../../.env` });
+const {
+  DB_TYPE,
+  DB_HOST,
+  DB_USER,
+  DB_NAME,
+  DB_PASSWORD,
+  DB_PORT,
+} = require('../common/env/env');
 
 module.exports = {
   development: {
-    client: process.env.DB_TYPE,
+    client: DB_TYPE,
     connection: {
-      host: process.env.DB_HOST,
-      user: process.env.DB_USER,
-      database: process.env.DB_NAME,
-      password: process.env.DB_PASSWORD,
-      port: process.env.DB_PORT,
+      host: DB_HOST,
+      user: DB_USER,
+      database: DB_NAME,
+      password: DB_PASSWORD,
+      port: DB_PORT,
       charset: 'utf8',
     },
     migrations: {

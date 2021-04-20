@@ -6,6 +6,7 @@ const logger = require('morgan');
 const chalk = require('chalk');
 const router = require('./src/api/router');
 const { handleError } = require('./src/common/helpers/errorHandler');
+const { PORT } = require('./src/common/env/env');
 // ExpressJS application
 const app = express();
 require('dotenv').config();
@@ -40,11 +41,12 @@ app.use((req, res) =>
 
 // Error handler
 app.use((err, req, res, _next) => {
+  console.log(err);
   handleError(err, res);
 });
 
 // Initialize ExpressJS app
-app.set('port', process.env.PORT || 3000);
+app.set('port', PORT || 3000);
 const server = app.listen(app.get('port'), () => {
   if (app.get('env') !== 'test') {
     console.log(
