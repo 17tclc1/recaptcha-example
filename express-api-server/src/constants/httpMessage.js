@@ -1,5 +1,5 @@
 module.exports = {
-  USER_NOT_FOUND: 'User not found',
+  USER_NOT_FOUND: 'Email or password is incorrect',
   EMAIL_EXISTS: 'User with that email already exists',
   INVALID_CREDENTIAL: 'Email or password is incorrect',
   LOGIN_REQUIRED: 'You must be login to use this protected feature',
