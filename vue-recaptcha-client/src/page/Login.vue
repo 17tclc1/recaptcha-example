@@ -147,8 +147,8 @@ export default {
             trustToken: this.trustToken,
           });
           if(response.data.statusCode === 200) {
-            console.log(response.data.data);
             localStorage.setItem('token', response.data.data);
+            this.$router.push('/');
           } else {
             await this.requestRecaptcha();
           }
@@ -189,7 +189,7 @@ export default {
 .login-background {
   min-height: 100vh;
   width: 100%;
-  background-image: url('../assets/background.jpg');
+  background-image: url('../assets/img/background.jpg');
   background-repeat: no-repeat;
   background-size: cover;
 }
