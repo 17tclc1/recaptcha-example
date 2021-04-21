@@ -62,6 +62,7 @@
 
 <script>
 import axios from 'axios';
+import { debounce } from 'lodash';
 export default {
   data() {
     return {
@@ -80,7 +81,7 @@ export default {
     }
   },
   methods: {
-    async requestRecaptcha() {
+    requestRecaptcha: debounce(async function() {
       try {
         this.recaptcha.result = null;
         const payload = await axios.get(process.env.VUE_APP_RECAPTCHA_BASE_URL);
@@ -108,8 +109,8 @@ export default {
           });
         }
       }
-    },
-    async submitRecaptcha() {
+    }, 500),
+    submitRecaptcha: debounce(async function() {
       try {
         const payload = await axios.post(`${process.env.VUE_APP_RECAPTCHA_BASE_URL}/solve`, this.recaptcha);
         this.trustToken = payload.data.data.trustToken
@@ -134,8 +135,8 @@ export default {
         }
         await this.requestRecaptcha();
       }
-    },
-    async submit() {
+    }, 500),
+    submit: debounce(async function() {
       try {
         if(!this.trustToken) {
           await this.requestRecaptcha();
@@ -147,21 +148,31 @@ export default {
           });
           if(response.data.statusCode === 200) {
             console.log(response.data.data);
+            localStorage.setItem('token', response.data.data);
           } else {
             await this.requestRecaptcha();
           }
         }
       } catch (error) {
-        console.log(error);
-        this.$bvToast.toast('An unknown error has occurred. Please try again', {
-          title: 'An error has occurred while login',
-          autoHideDelay: 3000,
-          variant: 'danger',
-          appendToast: false
-        });
+        if(error.response && error.response.data) {
+          this.$bvToast.toast(error.response.data.message, {
+            title: 'An error has occurred while login',
+            autoHideDelay: 3000,
+            variant: 'danger',
+            appendToast: false
+          });
+        } else {
+          console.log(error);
+          this.$bvToast.toast('An unknown error has occurred. Please try again', {
+            title: 'An error has occurred while requesting recaptcha',
+            autoHideDelay: 3000,
+            variant: 'danger',
+            appendToast: false
+          });
+        }
         await this.requestRecaptcha();
       }
-    }
+    }, 500),
   }
 }
 </script>
