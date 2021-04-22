@@ -35,7 +35,28 @@ const login = async (req, res, next) => {
     return next(err);
   }
 };
-
+const register = async (req, res, next) => {
+  try {
+    const password = await bcrypt.hash(req.body.password, 10);
+    const user = await authService.getOneByEmail(req.body.email);
+    if (user) {
+      throw new HTTPException(400, 'Email already exists');
+    }
+    const id = await authService.createOne({
+      email: req.body.email,
+      password,
+    });
+    const data = await authService.getOneById(id);
+    return res.json({
+      status: 'success',
+      statusCode: 200,
+      data,
+    });
+  } catch (err) {
+    return next(err);
+  }
+};
 module.exports = {
   login,
+  register,
 };
